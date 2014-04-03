@@ -64,9 +64,53 @@
 			xmlhttp.open("GET","checkProchainPassages.php?idLigne="+idLigne+"&idStation="+idStation,true);
 			xmlhttp.send();
 		}
+		
+		function like(val){
+			idLigne = $("#lignes option:selected").val();
+			if (window.XMLHttpRequest){	// code for IE7+, Firefox, Chrome, Opera, Safari
+				xmlhttp=new XMLHttpRequest();
+			} else {	// code for IE6, IE5
+				xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+			}
+			
+			xmlhttp.onreadystatechange=function(){
+				if (xmlhttp.readyState==4 && xmlhttp.status==200){
+					if(val == true)
+						document.getElementById('btnLike').innerHTML = xmlhttp.responseText + " Like(s)";
+					else
+						document.getElementById('btnDisLike').innerHTML = xmlhttp.responseText + " Dislike(s)";
+				}
+			}
+			xmlhttp.open("GET","like.php?like="+val+"&idLigne="+idLigne,true);
+			xmlhttp.send();
+		}
+		
+		function showlike(){
+			idLigne = $("#lignes option:selected").val();
+			if (window.XMLHttpRequest){	// code for IE7+, Firefox, Chrome, Opera, Safari
+				xmlhttp=new XMLHttpRequest();
+			} else {	// code for IE6, IE5
+				xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+			}
+			
+			xmlhttp.onreadystatechange=function(){
+				if (xmlhttp.readyState==4 && xmlhttp.status==200){
+					var res = xmlhttp.responseText.split("/");
+					document.getElementById('btnLike').innerHTML = res[0] + " Like(s)";
+					document.getElementById('btnDisLike').innerHTML = res[1] + " Dislike(s)";
+				}
+			}
+			xmlhttp.open("GET","showlike.php?idLigne="+idLigne,true);
+			xmlhttp.send();
+		}
+		
+		function init(){
+			afficheStations();
+			showlike();	
+		}
 	</script>
   
-	<body onload="afficheStations()">
+	<body onload="init()">
 		<div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
 			<div class="container">
 				<div class="navbar-header">
@@ -81,7 +125,7 @@
 				<div class="collapse navbar-collapse">
 					<ul class="nav navbar-nav">
 					<li class="active"><a href="#">ST1</a></li>
-					<li><a href="story2.php">ST2</a></li>
+					<li><a href="#ST2">ST2</a></li>
 					<li><a href="#ST3">ST3</a></li>
 					<li><a href="#ST4">ST4</a></li>
 					</ul>
@@ -94,7 +138,7 @@
 		<div class="row">
 			<div class="col-md-4">
 				<label class="control-label">Choisir une ligne :</label>
-				<select class="form-control" id="lignes" onchange="afficheStations()">
+				<select class="form-control" id="lignes" onchange="afficheStations(); showlike();">
 					<?php
 						include "bdd.php";
 						$resultats=$connection->query("SELECT idLigne, numLigne, nomLigne FROM lignes ORDER BY numLigne");
@@ -106,7 +150,8 @@
 						$resultats->closeCursor();
 					?>
 				</select>
-				<span id="nomLigne"></span>
+				<span id="nomLigne"></span><br>
+				<button type="button" class="btn btn-success" onClick="like(true)" id="btnLike">Like(s)</button>   <button type="button" class="btn btn-danger" onClick="like(false)" id="btnDisLike">Unlike(s)</button>
 			</div>
 			<div class="col-md-4">
 				<label class="control-label">Choisir une station :</label>
