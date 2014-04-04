@@ -119,9 +119,9 @@
 				</div>
 				<div class="collapse navbar-collapse">
 					<ul class="nav navbar-nav">
-					<li class="active"><a href="#">ST1</a></li>
-					<li><a href="#ST2">ST2</a></li>
-					<li><a href="#ST3">ST3</a></li>
+					<li><a href="index.php">ST1</a></li>
+					<li class="active"><a href="story2.php">ST2</a></li>
+					<li><a href="story3.php">ST3</a></li>
 					<li><a href="#ST4">ST4</a></li>
 					</ul>
 				</div><!--/.nav-collapse -->
@@ -129,7 +129,7 @@
 		</div>
 
 	<div class="container">
-		<h1>Story 1</h1>
+		<h1>Story 2</h1>
 		<div class="row">
 			<div class="col-md-4">
 				<label class="control-label">Choisir une ligne :</label>
