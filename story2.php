@@ -103,14 +103,9 @@
 			xmlhttp.open("GET","showlike.php?idLigne="+idLigne,true);
 			xmlhttp.send();
 		}
-		
-		function init(){
-			afficheStations();
-			showlike();	
-		}
 	</script>
   
-	<body onload="init()">
+	<body onload="afficheStations()">
 		<div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
 			<div class="container">
 				<div class="navbar-header">
@@ -138,7 +133,7 @@
 		<div class="row">
 			<div class="col-md-4">
 				<label class="control-label">Choisir une ligne :</label>
-				<select class="form-control" id="lignes" onchange="afficheStations(); showlike();">
+				<select class="form-control" id="lignes" onchange="afficheStations();">
 					<?php
 						include "bdd.php";
 						$resultats=$connection->query("SELECT idLigne, numLigne, nomLigne FROM lignes ORDER BY numLigne");
