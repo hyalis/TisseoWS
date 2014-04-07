@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 	<head>
 	<meta charset="utf8">
@@ -43,7 +43,7 @@
 					<li><a href="index.php">ST1</a></li>
 					<li><a href="story2.php">ST2</a></li>
 					<li class="active"><a href="story3.php">ST3</a></li>
-					<li><a href="#ST4">ST4</a></li>
+					<li><a href="story4.php">ST4</a></li>
 					</ul>
 				</div><!--/.nav-collapse -->
 			</div>

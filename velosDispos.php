@@ -1,22 +1,16 @@
 <?php
-// TODO TODO TODO TODO
-
-$jsonObject = json_decode(file_get_contents("https://api.jcdecaux.com/vls/v1/stations?apiKey=ee0bec5c1e5cc3271b71708608244e5047472ca7&contract=Toulouse"));
-
-
-
-/*
-if(!isset($jsonObject->{'departures'}->{'departure'}[0]->{'dateTime'}))
-{
-	echo "Pas de departs disponibles pour cette ligne";
-} else {
-
-	echo $jsonObject->{'departures'}->{'departure'}[0]->{'dateTime'}. " Vers " .$jsonObject->{'departures'}->{'departure'}[0]->{'destination'}[0]->{'name'} . "<br>";
-	echo $jsonObject->{'departures'}->{'departure'}[1]->{'dateTime'}. " Vers " .$jsonObject->{'departures'}->{'departure'}[1]->{'destination'}[0]->{'name'} . "<br>";
-	echo $jsonObject->{'departures'}->{'departure'}[2]->{'dateTime'}. " Vers " .$jsonObject->{'departures'}->{'departure'}[2]->{'destination'}[0]->{'name'} . "<br>";
-	echo $jsonObject->{'departures'}->{'departure'}[3]->{'dateTime'}. " Vers " .$jsonObject->{'departures'}->{'departure'}[3]->{'destination'}[0]->{'name'} . "<br>";
-}
-*/
-
+	$jsonObject = json_decode(file_get_contents("https://api.jcdecaux.com/vls/v1/stations?apiKey=ee0bec5c1e5cc3271b71708608244e5047472ca7&contract=Toulouse"));
+	foreach ($jsonObject as $stationVelo) {
+		if($stationVelo->position->lng >= 1.451889 && $stationVelo->position->lng <= 1.488968 && $stationVelo->position->lat >= 43.557804 && $stationVelo->position->lat <= 43.567849 && $stationVelo->status == "OPEN"){
+			if($stationVelo->available_bikes > 0)
+				echo "<span class='label label-default'>" . $stationVelo->name . "</span><br><span class='label label-success'>" . $stationVelo->available_bikes . "/" . $stationVelo->bike_stands . "</span><br>";
+			else
+				echo "<span class='label label-default'>" . $stationVelo->name . "</span><br><span class='label label-danger'>" . $stationVelo->available_bikes . "/" . $stationVelo->bike_stands . "</span><br>";
+		}
+	}
 
 ?> 
+
+
+
+

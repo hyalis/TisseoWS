@@ -16,6 +16,10 @@
 	<!-- Custom styles for this template -->
 	<link href="css/starter-template.css" rel="stylesheet">
 
+	<style type="text/css">
+		#map-canvas { height: 300px; width: 100%; }
+    </style>
+
 	<!-- Just for debugging purposes. Don't actually copy this line! -->
 	<!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
 
@@ -25,49 +29,79 @@
 	  <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
 	<![endif]-->
 	</head>
-
-	<script>
-		function afficheStations()
-		{
-			idLigne = $("#lignes option:selected").val();
-			document.getElementById('nomLigne').innerHTML = $("#lignes option:selected").data("nom");
-			if (window.XMLHttpRequest){	// code for IE7+, Firefox, Chrome, Opera, Safari
-				xmlhttp=new XMLHttpRequest();
-			} else {	// code for IE6, IE5
-				xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
-			}
-			xmlhttp.onreadystatechange=function(){
-				if (xmlhttp.readyState==4 && xmlhttp.status==200){
-					document.getElementById('stations').innerHTML=xmlhttp.responseText;
-					document.getElementById('stations').style.visibility="visible";
-					afficheResult();
-				}
-			}
-			xmlhttp.open("GET","getStations.php?idLigne="+idLigne,true);
-			xmlhttp.send();
-		}
-		
-		function afficheResult()
-		{
-			idLigne = $("#lignes option:selected").val();
-			idStation = $("#stations option:selected").val();
-			if (window.XMLHttpRequest){	// code for IE7+, Firefox, Chrome, Opera, Safari
-				xmlhttp=new XMLHttpRequest();
-			} else {	// code for IE6, IE5
-				xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
-			}
-			xmlhttp.onreadystatechange=function(){
-				if (xmlhttp.readyState==4 && xmlhttp.status==200){
-					document.getElementById('resultat').innerHTML=xmlhttp.responseText;
-				}
-			}
-			xmlhttp.open("GET","checkProchainPassages.php?idLigne="+idLigne+"&idStation="+idStation,true);
-			xmlhttp.send();
-		}
-	</script>	
 	
-  
-	<body onload="afficheStations()">
+	<script type="text/javascript"
+		src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDQZg8pUxWMmRpO_RHxyF29tPPthfvIRX8&sensor=true">
+	</script>
+	<script type="text/javascript">
+		function initialize() {
+			var mapOptions = {
+				center: new google.maps.LatLng(43.561181, 1.469393),
+				zoom: 14
+			};
+			var map = new google.maps.Map(document.getElementById("map-canvas"),
+			mapOptions);
+			var bounds = new google.maps.LatLngBounds();
+
+			if (window.XMLHttpRequest){	// code for IE7+, Firefox, Chrome, Opera, Safari
+				xmlhttp=new XMLHttpRequest();
+			} else {	// code for IE6, IE5
+				xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+			}
+	
+			xmlhttp.onreadystatechange=function(){
+				if (xmlhttp.readyState==4 && xmlhttp.status==200){
+					var stations = xmlhttp.responseText.split("<br>");
+					var infoWindowContent = new Array();
+					var markers = new Array();
+					for (index = 0; index < stations.length-1; ++index) {
+						stationVelo = stations[index].split("***");
+						
+						//Markers
+						markers.push([stationVelo[0],stationVelo[1],stationVelo[2]]);
+					
+						//Nom de la station et vélos dispo
+						contentString = "<h3>" + stationVelo[0] + "</h3> Vélo(s) disponible(s) = " + stationVelo[3] + "/" + stationVelo[4];
+						infoWindowContent.push(contentString);
+						
+					}
+					
+					var infoWindow = new google.maps.InfoWindow(), marker, i;
+					
+					for( i = 0; i < markers.length; i++ ) {
+						var position = new google.maps.LatLng(markers[i][1], markers[i][2]);
+						bounds.extend(position);
+						marker = new google.maps.Marker({
+							position: position,
+							map: map,
+							title: markers[i][0]
+						});
+						
+						google.maps.event.addListener(marker, 'click', (function(marker, i) {
+							return function() {
+								infoWindow.setContent(infoWindowContent[i]);
+								infoWindow.open(map, marker);
+							}
+						})(marker, i));
+
+						map.fitBounds(bounds);
+					}
+
+					var boundsListener = google.maps.event.addListener((map), 'bounds_changed', function(event) {
+						this.setZoom(14);
+						google.maps.event.removeListener(boundsListener);
+					});
+					
+				}
+			}
+		xmlhttp.open("GET","getVelos.php",true);
+		xmlhttp.send();	
+		}
+		google.maps.event.addDomListener(window, 'load', initialize);
+	</script>
+
+
+	<body>
 		<div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
 			<div class="container">
 				<div class="navbar-header">
@@ -81,47 +115,27 @@
 				</div>
 				<div class="collapse navbar-collapse">
 					<ul class="nav navbar-nav">
-					<li class="active"><a href="index.php">ST1</a></li>
+					<li><a href="index.php">ST1</a></li>
 					<li><a href="story2.php">ST2</a></li>
 					<li><a href="story3.php">ST3</a></li>
-					<li><a href="story4.php">ST4</a></li>
+					<li class="active"><a href="story4.php">ST4</a></li>
 					</ul>
 				</div><!--/.nav-collapse -->
 			</div>
 		</div>
 
 	<div class="container">
-		<h1>Story 1</h1>
+		<h1>Story 4</h1>
 		<div class="row">
-			<div class="col-md-4">
-				<label class="control-label">Choisir une ligne :</label>
-				<select class="form-control" id="lignes" onchange="afficheStations()">
-					<?php
-						include "bdd.php";
-						$resultats=$connection->query("SELECT idLigne, numLigne, nomLigne FROM lignes ORDER BY numLigne");
-						$resultats->setFetchMode(PDO::FETCH_OBJ);
-						while( $resultat = $resultats->fetch() )
-						{
-							echo '<option data-nom="' . $resultat->nomLigne . '" value = ' . $resultat->idLigne .'>'.$resultat->numLigne.'</option>';
-						}
-						$resultats->closeCursor();
-					?>
-				</select>
-				<span id="nomLigne"></span>
+			<div class="col-md-2">
+				<?php include "velosDispos.php"; ?>
 			</div>
-			<div class="col-md-4">
-				<label class="control-label">Choisir une station :</label>
-				<select class="form-control" id="stations" style="visibility: hidden;" onchange="afficheResult()">
-				
-				</select>
-			</div>
-			<div class="col-md-4">
-				<label class="control-label">Résultat :</label><br>
-				<span id="resultat"></span>
+			<div class="col-md-10">
+				<div id="map-canvas"/>
 			</div>
 		</div>
-	</div><!-- /.container -->
-
+	</div>
+	
 	<!-- Bootstrap core JavaScript
 	================================================== -->
 	<!-- Placed at the end of the document so the pages load faster -->
