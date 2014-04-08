@@ -59,7 +59,7 @@
 			<div class="col-md-6">
 				<h2> Vélos disponibles : </h2>
 				<!-- Lister les velos dispo pour les differentes bornes autour de l'UPS -->
-			
+				<?php include "velosDispos.php"; ?>
 			</div>
 		</div>
 	</div><!-- /.container -->
