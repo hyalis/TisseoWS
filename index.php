@@ -27,10 +27,20 @@
 	</head>
 
 	<script>
+		function rgb2hex(rgb){
+			rgb = rgb.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/);
+			return "#" +
+			("0" + parseInt(rgb[1],10).toString(16)).slice(-2) +
+			("0" + parseInt(rgb[2],10).toString(16)).slice(-2) +
+			("0" + parseInt(rgb[3],10).toString(16)).slice(-2);
+		}
 		function afficheStations()
 		{
 			idLigne = $("#lignes option:selected").val();
 			document.getElementById('nomLigne').innerHTML = $("#lignes option:selected").data("nom");
+			var couleur = rgb2hex("rgb" + $("#lignes option:selected").data("couleur"));
+			$("#nomLigne").css('background-color', couleur);
+
 			if (window.XMLHttpRequest){	// code for IE7+, Firefox, Chrome, Opera, Safari
 				xmlhttp=new XMLHttpRequest();
 			} else {	// code for IE6, IE5
@@ -98,16 +108,18 @@
 				<select class="form-control" id="lignes" onchange="afficheStations()">
 					<?php
 						include "bdd.php";
-						$resultats=$connection->query("SELECT idLigne, numLigne, nomLigne FROM lignes ORDER BY numLigne");
+						$resultats=$connection->query("SELECT idLigne, numLigne, nomLigne, couleur FROM lignes ORDER BY numLigne");
 						$resultats->setFetchMode(PDO::FETCH_OBJ);
 						while( $resultat = $resultats->fetch() )
 						{
-							echo '<option data-nom="' . $resultat->nomLigne . '" value = ' . $resultat->idLigne .'>'.$resultat->numLigne.'</option>';
+							echo '<option data-couleur="' . $resultat->couleur . '" data-nom="' . $resultat->nomLigne . '" value = ' . $resultat->idLigne .'>'.$resultat->numLigne.'</option>';
 						}
 						$resultats->closeCursor();
 					?>
 				</select>
-				<span id="nomLigne"></span>
+				<br>
+				<span class="badge" id="nomLigne" style = "width: 100%;">
+				</span>
 			</div>
 			<div class="col-md-4">
 				<label class="control-label">Choisir une station :</label>

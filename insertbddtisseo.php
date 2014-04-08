@@ -28,9 +28,10 @@ for($i = 0; $i < count($jsonObject->{'stopAreas'}->{'stopArea'}); $i++)
 		$idLigne = $jsonObject->{'stopAreas'}->{'stopArea'}[$i]->{'line'}[$y]->{'id'};
 		$nomLigne = $jsonObject->{'stopAreas'}->{'stopArea'}[$i]->{'line'}[$y]->{'name'};
 		$numLigne = $jsonObject->{'stopAreas'}->{'stopArea'}[$i]->{'line'}[$y]->{'shortName'};
+		$couleur = $jsonObject->{'stopAreas'}->{'stopArea'}[$i]->{'line'}[$y]->{'color'};
 		//echo $idLigne . " " . $nomLigne . " " . $numLigne . "<br>";
 		// requete insertion ligne
-		$strInsert = "INSERT INTO lignes (idligne, numLigne, nomLigne) VALUES ('$idLigne','$numLigne', '$nomLigne')";
+		$strInsert = "INSERT INTO lignes (idligne, numLigne, nomLigne, couleur) VALUES ('$idLigne','$numLigne', '$nomLigne','$couleur')";
 		$connection->query($strInsert);
 		
 		// requete d'insert de station
