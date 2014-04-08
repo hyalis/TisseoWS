@@ -17,7 +17,7 @@
 	<link href="css/starter-template.css" rel="stylesheet">
 
 	<style type="text/css">
-		#map-canvas { height: 300px; width: 100%; }
+		#map-canvas { height: 460px; width: 100%; }
     </style>
 
 	<!-- Just for debugging purposes. Don't actually copy this line! -->
@@ -37,7 +37,7 @@
 		function initialize() {
 			var mapOptions = {
 				center: new google.maps.LatLng(43.561181, 1.469393),
-				zoom: 14
+				zoom: 15
 			};
 			var map = new google.maps.Map(document.getElementById("map-canvas"),
 			mapOptions);
@@ -88,7 +88,7 @@
 					}
 
 					var boundsListener = google.maps.event.addListener((map), 'bounds_changed', function(event) {
-						this.setZoom(14);
+						this.setZoom(15);
 						google.maps.event.removeListener(boundsListener);
 					});
 					
