@@ -70,6 +70,7 @@
 			xmlhttp.onreadystatechange=function(){
 				if (xmlhttp.readyState==4 && xmlhttp.status==200){
 					document.getElementById('resultat').innerHTML=xmlhttp.responseText;
+					showlike();
 				}
 			}
 			xmlhttp.open("GET","checkProchainPassages.php?idLigne="+idLigne+"&idStation="+idStation,true);
