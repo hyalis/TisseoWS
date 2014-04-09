@@ -69,11 +69,17 @@
 					var infoWindow = new google.maps.InfoWindow(), marker, i;
 					
 					for( i = 0; i < markers.length; i++ ) {
+						stationVelo = stations[i].split("***");
 						var position = new google.maps.LatLng(markers[i][1], markers[i][2]);
 						bounds.extend(position);
+						if(stationVelo[3] > 0)
+							icon = 'http://maps.google.com/mapfiles/ms/icons/green-dot.png';
+						else
+							icon = 'http://maps.google.com/mapfiles/ms/icons/red-dot.png';
 						marker = new google.maps.Marker({
 							position: position,
 							map: map,
+							icon: icon,
 							title: markers[i][0]
 						});
 						
